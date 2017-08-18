@@ -1,0 +1,53 @@
+package world;
+
+import javafx.application.Application;
+import javafx.stage.Stage;
+
+public class Eightqueens extends Application {
+	public static final int SIZE = 8;
+	private int [] queens = {-1,-1,-1,-1,-1,-1,-1,-1};
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		search();
+		
+	}
+	 //开始时任何一行都没有皇后，现在从第0行开始找到一个位置放置皇后，如果成功则将其放在改行，若没哟成功则回溯到是上个一行
+	private boolean search(){   
+		int k =0;
+		while (k>=0&&k<=SIZE){
+			int j = findposition(k);
+			if(j<0){
+				queens[k]= -1;
+				k--;
+			}else{
+				queens[k] =j;
+				k++;
+			}	
+		}
+		
+		if(k ==-1)
+			return false;
+		else 
+			return true;
+	}
+	//该方法在地k行寻找一个放置皇后的位置，从queens【k】+1 开始依次监测从start，start+1。。。一直到第七行，如果找到则返回下标，供fx使用
+	private int findposition(int k){
+		int start = queens[k]+1;
+		
+		for(int j=start;j<SIZE;j++){
+			if(isValid(k,j))
+				return j;
+		}
+		return -1;
+		
+	}
+	//把皇后问题的解决核心，用于检测是否和上一次放置的有冲突，它确保皇后没有被放置在同一列，左上角对角线或右上角对角线上
+	public boolean isValid(int row,int column){
+		for(int i=1;i<=row;i++){
+			if(queens[row-i]==column||queens[row - i]==column-i||queens[row -i] == column+i);
+				return false;
+		}
+		return true;
+	}
+}
